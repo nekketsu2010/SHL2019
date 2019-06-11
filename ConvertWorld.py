@@ -108,4 +108,12 @@ def remapCoodinateSystemImpl(inR, X, Y, outR):
         offset = j * rowLength
         for i in range(3):
             if x == i:
-                if outR[offset + i] = sx:
+                outR[offset + i] = -inR[offset + 0] if sx else inR[offset + 0]
+            if y == i:
+                outR[offset + i] = -inR[offset + 1] if sy else inR[offset + 1]
+            if z == i:
+                outR[offset + i] = -inR[offset + 2] if sz else inR[offset + 2]
+    if length == 16:
+        outR[3] = outR[7] = outR[11] = outR[12] = outR[13] = outR[14] = 0
+        outR[15] = 1
+    return True
