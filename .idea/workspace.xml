@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b3de1406-81a1-4a3b-84a2-c17493f389e8" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/ConvertWorld.py" beforeDir="false" afterPath="$PROJECT_DIR$/ConvertWorld.py" afterDir="false" />
-    </list>
+    <list default="true" id="b3de1406-81a1-4a3b-84a2-c17493f389e8" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -136,7 +134,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="57" y="78" width="1088" height="895" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23898782" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
