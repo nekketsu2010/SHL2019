@@ -9,7 +9,7 @@ def getRotationMatrix(R, I, gravity, geomagnetic):
     freeFallGravitySquared = 0.01 * g * g;
     if normsqA < freeFallGravitySquared:
         # gravity less than 10 % of normal value
-        return False
+        return R
     Ex = geomagnetic[0]
     Ey = geomagnetic[1]
     Ez = geomagnetic[2]
@@ -20,11 +20,11 @@ def getRotationMatrix(R, I, gravity, geomagnetic):
     if normH < 0.1:
         # device is close to free fall( or in space?), or close to
         # magnetic north pole.Typical values are > 100.
-        return False
+        return R
     invH = 1.0 / normH
     Hx *= invH
     Hy *= invH
-    Hz += invH
+    Hz *= invH
     invA = 1.0 / math.sqrt(Ax * Ax + Ay * Ay + Az * Az)
     Ax *= invA
     Ay *= invA
@@ -33,34 +33,62 @@ def getRotationMatrix(R, I, gravity, geomagnetic):
     My = Az * Hx - Ax * Hz
     Mz = Ax * Hy - Ay * Hx
     if R != None:
-        # compute the inclination matrix by projecting the geomagnetic
-        # vector onto the Z(gravity) and X(horizontal component
-        # of geomagnetic vector) axes.
-        invE = 1.0 / math.sqrt(Ex * Ex + Ey * Ey + Ez * Ez)
-        c = (Ex * Mx + Ey * My + Ez * Mz) * invE
-        s = (Ex * Ax + Ey * Ay * Ez * Az) * invE
-        if len(I) == 9:
-            I[0] = 1
-            I[1] = 0
-            I[2] = 0
-            I[3] = 0
-            I[4] = c
-            I[5] = s
-            I[6] = 0
-            I[7] = -s
-            I[8] = c
-        elif len(I) == 16:
-            I[0] = 1
-            I[1] = 0
-            I[2] = 0
-            I[4] = 0
-            I[5] = c
-            I[6] = s
-            I[8] = 0
-            I[9] = -s
-            I[10] = c
-            I[3] = I[7] = I[11] = I[12] = I[13] = I[14] = 0
-            I[15] = -1
+        if len(R) == 9:
+            R[0] = Hx
+            R[1] = Hy
+            R[2] = Hz
+            R[3] = Mx
+            R[4] = My
+            R[5] = Mz
+            R[6] = Ax
+            R[7] = Ay
+            R[8] = Az
+        elif len(R) == 16:
+            R[0] = Hx
+            R[1] = Hy
+            R[2] = Hz
+            R[3] = 0
+            R[4] = Mx
+            R[5] = My
+            R[6] = Mz
+            R[7] = 0
+            R[8] = Ax
+            R[9] = Ay
+            R[10] = Az
+            R[11] = 0
+            R[12] = 0
+            R[13] = 0
+            R[14] = 0
+            R[15] = 1
+
+    # # compute the inclination matrix by projecting the geomagnetic
+    # # vector onto the Z(gravity) and X(horizontal component
+    # # of geomagnetic vector) axes.
+    # invE = 1.0 / math.sqrt(Ex * Ex + Ey * Ey + Ez * Ez)
+    # c = (Ex * Mx + Ey * My + Ez * Mz) * invE
+    # s = (Ex * Ax + Ey * Ay * Ez * Az) * invE
+    # if len(I) == 9:
+    #     I[0] = 1
+    #     I[1] = 0
+    #     I[2] = 0
+    #     I[3] = 0
+    #     I[4] = c
+    #     I[5] = s
+    #     I[6] = 0
+    #     I[7] = -s
+    #     I[8] = c
+    # elif len(I) == 16:
+    #     I[0] = 1
+    #     I[1] = 0
+    #     I[2] = 0
+    #     I[4] = 0
+    #     I[5] = c
+    #     I[6] = s
+    #     I[8] = 0
+    #     I[9] = -s
+    #     I[10] = c
+    #     I[3] = I[7] = I[11] = I[12] = I[13] = I[14] = 0
+    #     I[15] = -1
     return R
 
 def remapCoodinateSystem(inR, X, Y, outR):
@@ -81,11 +109,11 @@ def remapCoodinateSystemImpl(inR, X, Y, outR):
     # where the 3rd line is the vector product of the first 2 lines
     length = len(outR)
     if len(inR) != length:
-        return False
+        return outR
     if (X & 0x7c) != 0 or (Y & 0x7c) != 0:
-        return False
+        return outR
     if (X & 0x3) == 0 or (Y & 0x3) == 0:
-        return False
+        return outR
     # Z is "the other" axis, its sign is either + / - sign(X) * sign(Y)
     # this can be calculated by exclusive - or 'ing X and Y; except for
     # the sign inversion(+ / -) which is calculated below.
@@ -116,4 +144,4 @@ def remapCoodinateSystemImpl(inR, X, Y, outR):
     if length == 16:
         outR[3] = outR[7] = outR[11] = outR[12] = outR[13] = outR[14] = 0
         outR[15] = 1
-    return True
+    return outR
