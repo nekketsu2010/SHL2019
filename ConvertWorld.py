@@ -61,7 +61,7 @@ def getRotationMatrix(R, I, gravity, geomagnetic):
             I[10] = c
             I[3] = I[7] = I[11] = I[12] = I[13] = I[14] = 0
             I[15] = -1
-    return True
+    return R
 
 def remapCoodinateSystem(inR, X, Y, outR):
     if inR == outR:
@@ -70,7 +70,7 @@ def remapCoodinateSystem(inR, X, Y, outR):
             size = len(outR)
             for i in range(size):
                 outR[i] = temp[i]
-            return True
+            return outR
     return remapCoodinateSystemImpl(inR, X, Y, outR)
 
 def remapCoodinateSystemImpl(inR, X, Y, outR):
