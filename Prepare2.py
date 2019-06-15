@@ -66,15 +66,21 @@ for i in range(0, len(acc_x)):
     for j in range(0, len(acc_x_s)):
         glovalAcc = calGlobalAcc([float(acc_x_s[j]), float(acc_y_s[j]), float(acc_z_s[j])], [float(gra_x_s[j]), float(gra_y_s[j]), float(gra_z_s[j])], [float(mag_x_s[j]), float(mag_y_s[j]), float(mag_z_s[j])])
         with open('GloAcc_x.txt', mode='a') as f:
-            f.write(' ' + str(glovalAcc[0][0]))
+            if j != 0:
+                f.write(' ')
+            f.write(str(glovalAcc[0][0]))
         with open('GloAcc_y.txt', mode='a') as f:
-            f.write(' ' + str(glovalAcc[1][0]))
+            if j != 0:
+                f.write(' ')
+            f.write(str(glovalAcc[1][0]))
         with open('GloAcc_z.txt', mode='a') as f:
-            f.write(' ' + str(glovalAcc[2][0]))
+            if j != 0:
+                f.write(' ')
+            f.write(str(glovalAcc[2][0]))
     with open('GloAcc_x.txt', mode='a') as f:
         f.write('\n')
     with open('GloAcc_y.txt', mode='a') as f:
         f.write('\n')
     with open('GloAcc_z.txt', mode='a') as f:
         f.write('\n')
-    print("１行終わった")
+    print(str(i) + "終わった")
