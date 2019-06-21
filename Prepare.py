@@ -9,7 +9,7 @@ import ConvertWorld
 
 folderName = sys.argv[1]
 
-folders = ['Stil', 'Walking', 'Run']#, 'Bike', 'Car', 'Bus', 'Train', 'Subway']
+folders = ['Stil', 'Walking', 'Run', 'Bike', 'Car', 'Bus', 'Train', 'Subway']
 
 directoryName = 'D:\\Huawei_Challenge2019\\challenge-2019-' + folderName + "\\Raw\\"
 print(len(sys.argv))
@@ -17,8 +17,7 @@ if len(sys.argv) > 2:
     folderName = sys.argv[2]
 
 with open(directoryName + folderName + ".csv", mode="w") as newcsv:
-    newcsv.write('Label,XY_accel_mean,XY_accel_variance,Z_accel_mean,Z_accel_variance\n')
-    # newcsv.write('Label,XY_accel_mean,XY_accel_variance,Z_accel_mean,Z_accel_variance,XYZ_mag_mean,XYZ_mag_variance,pressure_difference,XYZ_gyro_mean,XYZ_gyro_variance\n')
+    newcsv.write('Label,XY_accel_mean,XY_accel_variance,Z_accel_mean,Z_accel_variance,XYZ_mag_mean,XYZ_mag_variance,pressure_difference,XYZ_gyro_mean,XYZ_gyro_variance\n')
 
 for num in range(len(folders)):
     dirName = directoryName + folders[num]

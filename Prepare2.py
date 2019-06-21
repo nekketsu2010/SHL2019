@@ -1,6 +1,8 @@
 import numpy as np
 import ConvertWorld
 
+# 加速度を世界標準系に変換
+
 def calGlobalAcc(accels, gravities, geomagnetics):
     inR = [0] * 16
     inR = ConvertWorld.getRotationMatrix(R=inR, I=None, gravity=gravities, geomagnetic=geomagnetics)

@@ -1,7 +1,13 @@
-python Prepare.py train_bag
-python Prepare.py train_hips
-python Prepare.py train_torso
-python Prepare.py validate_all\Bag val_Bag
-python Prepare.py validate_all\Hand val_Hand
-python Prepare.py validate_all\Hips val_Hips
-python Prepare.py validate_all\Torso val_Torso
+cd /d D:
+cd D:\Huawei_Challenge2019\challenge-2019-train_bag
+python makeNumpyMatrix.py
+cd D:\Huawei_Challenge2019\challenge-2019-train_hips
+python makeNumpyMatrix.py
+cd D:\Huawei_Challenge2019\challenge-2019-train_torso
+python makeNumpyMatrix.py
+cd D:\Huawei_Challenge2019\challenge-2019-validate_all\Hand
+python makeNumpyMatrix.py
+cd D:\Huawei_Challenge2019\challenge-2019-validate_all\Torso
+python makeNumpyMatrix.py
+cd D:\Huawei_Challenge2019\challenge-2019-validate_all\Hips
+python makeNumpyMatrix.py
