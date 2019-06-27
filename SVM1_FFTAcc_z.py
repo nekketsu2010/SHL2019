@@ -26,7 +26,7 @@ for sampleName in sampleNameList[2:]:
     print(sampleName)
     acc_z = np.load(FFT_Acc_z_FolderName + "\\" + sampleName)
     mean_variance_skew = np.load(mean_variance_skew_Folder + "\\" + sampleName)
-    np_array = np.vstack(acc_z, mean_variance_skew)
+    np_array = np.vstack((acc_z, mean_variance_skew))
     np_array = np_array[np.newaxis, :, :]
     X = np.vstack((X, np_array))
 
