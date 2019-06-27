@@ -7,6 +7,18 @@ from sklearn.preprocessing import MinMaxScaler
 import pickle
 import os
 
+def zscore(x, axis = None, xmean = None, xstd = None):
+    if xmean == None:
+        xmean = x.mean(axis=axis, keepdims=True)
+    if xstd == None:
+        xstd  = np.std(x, axis=axis, keepdims=True)
+    zscore = (x-xmean)/xstd
+
+    # このときのxmeanとxstdを保存しておく
+    with open("stdFile.binaryfile", 'wb') as f:
+        pickle.dump([xmean, xstd], f)
+    return zscore
+
 # 最初にFFTデータと平均分散データを結合する
 FFT_Acc_z_FolderName = 'D:\\Huawei_Challenge2019\\challenge-2019-train_bag\\FFT_sample_Acc_z'
 mean_variance_skew_Folder = 'D:\\Huawei_Challenge2019\\challenge-2019-train_bag\\mean_variance_skew_Acc_Mag'
@@ -33,11 +45,10 @@ for sampleName in sampleNameList[2:]:
 Y = np.load("Label.npy")
 
 #標準化をする
-stdsc = StandardScaler()
-X_std = stdsc.fit_transform(X)
+X_std = zscore(X, axis=0)
 print(X_std[0:5])
-with open('stdFile.binaryfile', 'wb') as file:
-    pickle.dump(stdsc, file)
+
+np.savez("train_bag", X=X_std, Y=Y)
 
 #ここでnanの行は消す
 deleteIndex = np.isnan(X_std)
