@@ -19,7 +19,7 @@ FFT_Mag_xyz_FolderName = '\\FFT_sample_Mag_xyz'
 FFT_Acc_z_FolderName = '\\FFT_sample_Acc_z'
 mean_variance_skew_Folder = '\\mean_variance_skew_Acc_Mag'
 i = 0
-
+X = []
 for position in positions:
     folder = folderMaster + position
     sampleNameList = os.listdir(folder + FFT_Acc_z_FolderName)
@@ -33,10 +33,8 @@ for position in positions:
     acc_z = acc_z.flatten()
     mean_variance_skew = mean_variance_skew[0:9].flatten()
     np_array = np.hstack((mag_xyz, acc_z, mean_variance_skew))
-    if i == 0:
-        X = np_array
-    else:
-        X = np.vstack((X, np_array))
+    np_array = np_array.tolist()
+    X.append(np_array)
     for sampleName in sampleNameList[1:]:
         print(sampleName)
         mag_xyz = np.load(folder + FFT_Mag_xyz_FolderName + "\\" + sampleName)
@@ -46,9 +44,11 @@ for position in positions:
         acc_z = acc_z.flatten()
         mean_variance_skew = mean_variance_skew[0:9].flatten()
         np_array = np.hstack((mag_xyz, acc_z, mean_variance_skew))
-        X = np.vstack((X, np_array))
+        np_array = np_array.tolist()
+        X.append(np_array)
     i += 1
 
+X = np.asarray(X)
 Label = np.load("val_Label.npy")
 Y = Label.copy()
 Y = np.vstack(Y, Label)
