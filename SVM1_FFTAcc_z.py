@@ -20,35 +20,46 @@ def zscore(x, axis = None, xmean = None, xstd = None):
     return zscore
 
 # 最初にFFTデータと平均分散データを結合する
-FFT_Acc_z_FolderName = 'D:\\Huawei_Challenge2019\\challenge-2019-train_bag\\FFT_sample_Acc_z'
-mean_variance_skew_Folder = 'D:\\Huawei_Challenge2019\\challenge-2019-train_bag\\mean_variance_skew_Acc_Mag'
+folderMaster = 'D:\\Huawei_Challenge2019\\challenge-2019-train_'
+positions = ['bag', 'hips', 'torso']
+FFT_Acc_z_FolderName = '\\FFT_sample_Acc_z'
+mean_variance_skew_Folder = '\\mean_variance_skew_Acc_Mag'
+i = 0
+for position in positions:
+    folder = folderMaster + position
+    sampleNameList = os.listdir(folder + FFT_Acc_z_FolderName)
+    acc_z = np.load(folder + FFT_Acc_z_FolderName + "\\" + sampleNameList[0])
+    mean_variance_skew = np.load(folder + mean_variance_skew_Folder + "\\" + sampleNameList[0])
+    print(acc_z.shape)
+    print(mean_variance_skew.shape)
+    acc_z = acc_z.flatten()
+    mean_variance_skew = mean_variance_skew[0:9].flatten()
+    np_array = np.hstack((acc_z, mean_variance_skew))
+    if i == 0:
+        X = np_array
+    else:
+        X = np.vstack((X, np_array))
+    for sampleName in sampleNameList[1:]:
+        print(sampleName)
+        acc_z = np.load(folder + FFT_Acc_z_FolderName + "\\" + sampleName)
+        mean_variance_skew = np.load(folder + mean_variance_skew_Folder + "\\" + sampleName)
+        acc_z = acc_z.flatten()
+        mean_variance_skew = mean_variance_skew[0:9].flatten()
+        np_array = np.hstack((acc_z, mean_variance_skew))
+        X = np.vstack((X, np_array))
+    i += 1
 
-sampleNameList = os.listdir(FFT_Acc_z_FolderName)
-acc_z = np.load(FFT_Acc_z_FolderName + "\\" + sampleNameList[0])
-mean_variance_skew = np.load(mean_variance_skew_Folder + "\\" + sampleNameList[0])
-print(acc_z.shape)
-print(mean_variance_skew.shape)
-np_array = np.vstack((acc_z, mean_variance_skew))
-X = np_array
-acc_z = np.load(FFT_Acc_z_FolderName + "\\" + sampleNameList[1])
-mean_variance_skew = np.load(mean_variance_skew_Folder + "\\" + sampleNameList[1])
-np_array = np.vstack((acc_z, mean_variance_skew))
-X = np.stack([X, np_array], axis=0)
-for sampleName in sampleNameList[2:]:
-    print(sampleName)
-    acc_z = np.load(FFT_Acc_z_FolderName + "\\" + sampleName)
-    mean_variance_skew = np.load(mean_variance_skew_Folder + "\\" + sampleName)
-    np_array = np.vstack((acc_z, mean_variance_skew))
-    np_array = np_array[np.newaxis, :, :]
-    X = np.vstack((X, np_array))
-
-Y = np.load("Label.npy")
+Label = np.load("Label.npy")
+Y = Label.copy()
+Y = np.vstack(Y, Label)
+Y = np.vstack(Y, Label)
 
 #標準化をする
 X_std = zscore(X, axis=0)
 print(X_std[0:5])
 
-np.savez("train_bag", X=X_std, Y=Y)
+np.savez("train", X=X_std, Y=Y)
+
 
 #ここでnanの行は消す
 deleteIndex = np.isnan(X_std)
@@ -63,7 +74,6 @@ Y[Y==8] = 1
 
 print(X_std.shape)
 print(Y.shape)
-exit()
 
 # 学習開始！
 clf = svm.SVC(verbose=True)
