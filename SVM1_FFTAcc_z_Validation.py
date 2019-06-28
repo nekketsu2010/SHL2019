@@ -6,40 +6,44 @@ import pickle
 import os
 
 def zscore(x, axis = None, xmean = None, xstd = None):
-    print(x.shape)
-    print(xmean.shape)
-    print(xstd.shape)
-    # if xmean == None:
-    #     xmean = x.mean(axis=axis, keepdims=True)
-    # if xstd == None:
-    #     xstd  = np.std(x, axis=axis, keepdims=True)
     zscore = (x-xmean)/xstd
-
     return zscore
 
 # 最初にFFTデータと平均分散データを結合する
-FFT_Acc_z_FolderName = 'D:\Huawei_Challenge2019\challenge-2019-validate_all\Bag\\FFT_sample_Acc_z'
-mean_variance_skew_Folder = 'D:\Huawei_Challenge2019\challenge-2019-validate_all\Bag\\mean_variance_skew_Acc_Mag'
+folderMaster = 'D:\\Huawei_Challenge2019\\challenge-2019-validate_all\\'
+positions = ['Bag', 'Hips', 'Torso', 'Hand']
+FFT_Acc_z_FolderName = '\\FFT_sample_Acc_z'
+mean_variance_skew_Folder = '\\mean_variance_skew_Acc_Mag'
+i = 0
 
-sampleNameList = os.listdir(FFT_Acc_z_FolderName)
-acc_z = np.load(FFT_Acc_z_FolderName + "\\" + sampleNameList[0])
-mean_variance_skew = np.load(mean_variance_skew_Folder + "\\" + sampleNameList[0])
-print(acc_z.shape)
-print(mean_variance_skew.shape)
-acc_z = acc_z.flatten()
-mean_variance_skew = mean_variance_skew[0:9].flatten()
-np_array = np.hstack((acc_z, mean_variance_skew))
-X = np_array
-for sampleName in sampleNameList[1:]:
-    print(sampleName)
-    acc_z = np.load(FFT_Acc_z_FolderName + "\\" + sampleName)
-    mean_variance_skew = np.load(mean_variance_skew_Folder + "\\" + sampleName)
+for position in positions:
+    folder = folderMaster + position
+    sampleNameList = os.listdir(FFT_Acc_z_FolderName)
+    acc_z = np.load(FFT_Acc_z_FolderName + "\\" + sampleNameList[0])
+    mean_variance_skew = np.load(mean_variance_skew_Folder + "\\" + sampleNameList[0])
+    print(acc_z.shape)
+    print(mean_variance_skew.shape)
     acc_z = acc_z.flatten()
     mean_variance_skew = mean_variance_skew[0:9].flatten()
     np_array = np.hstack((acc_z, mean_variance_skew))
-    X = np.vstack((X, np_array))
+    if i == 0:
+        X = np_array
+    else:
+        X = np.vstack((X, np_array))
+    for sampleName in sampleNameList[1:]:
+        print(sampleName)
+        acc_z = np.load(FFT_Acc_z_FolderName + "\\" + sampleName)
+        mean_variance_skew = np.load(mean_variance_skew_Folder + "\\" + sampleName)
+        acc_z = acc_z.flatten()
+        mean_variance_skew = mean_variance_skew[0:9].flatten()
+        np_array = np.hstack((acc_z, mean_variance_skew))
+        X = np.vstack((X, np_array))
+    i += 1
 
 Y = np.load("val_Label.npy")
+Y = Label.copy()
+Y = np.vstack(Y, Label)
+Y = np.vstack(Y, Label)
 
 #標準化をする
 with open("stdFile.binaryfile", 'rb') as f:
@@ -51,7 +55,7 @@ xstd = stdData[1]
 X_std = zscore(X, xmean=xmean, xstd=xstd)
 print(X_std[0:5])
 
-np.savez("val_bag", X=X_std, Y=Y)
+np.savez("val1", X=X_std, Y=Y)
 
 #ここでnanの行は0にする
 X_std[np.isnan(X_std)] = 0
@@ -68,7 +72,7 @@ print(Y.shape)
 with open('model1.binaryfile', 'rb') as f:
     model = pickle.load(f)
 predict = model.predict(X_std)
-with open('predict.binaryfile', 'wb') as file:
+with open('predict1.binaryfile', 'wb') as file:
     pickle.dump(predict, file)
 
 print(accuracy_score(Y, predict))
