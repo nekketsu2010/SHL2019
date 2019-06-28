@@ -49,7 +49,7 @@ for position in positions:
         X = np.vstack((X, np_array))
     i += 1
 
-Label = np.load("Label.npy")
+Label = np.load("train_Label.npy")
 Y = Label.copy()
 Y = np.vstack(Y, Label)
 Y = np.vstack(Y, Label)
