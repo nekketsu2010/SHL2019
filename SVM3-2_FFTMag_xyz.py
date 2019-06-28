@@ -27,7 +27,7 @@ FFT_Mag_xyz_FolderName = '\\FFT_sample_Mag_xyz'
 i = 0
 for position in positions:
     folder = folderMaster + position
-    sampleNameList = os.listdir(folder + FFT_Acc_z_FolderName)
+    sampleNameList = os.listdir(folder + FFT_Mag_xyz_FolderName)
     mag_xyz = np.load(folder + FFT_Mag_xyz_FolderName + "\\" + sampleNameList[0])
     print(mag_xyz.shape)
     mag_xyz = mag_xyz.flatten()
@@ -46,8 +46,8 @@ for position in positions:
 
 Label = np.load("train_Label.npy")
 Y = Label.copy()
-Y = np.vstack(Y, Label)
-Y = np.vstack(Y, Label)
+Y = np.vstack((Y, Label))
+Y = np.vstack((Y, Label))
 
 #標準化をする
 X_std = zscore(X, axis=0)

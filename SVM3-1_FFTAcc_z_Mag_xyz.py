@@ -52,8 +52,8 @@ for position in positions:
 
 Label = np.load("train_Label.npy")
 Y = Label.copy()
-Y = np.vstack(Y, Label)
-Y = np.vstack(Y, Label)
+Y = np.vstack((Y, Label))
+Y = np.vstack((Y, Label))
 
 #標準化をする
 X_std = zscore(X, axis=0)

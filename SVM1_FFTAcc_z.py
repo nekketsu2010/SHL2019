@@ -20,7 +20,7 @@ def zscore(x, axis = None, xmean = None, xstd = None):
     return zscore
 
 # 最初にFFTデータと平均分散データを結合する
-folderMaster = 'D:\\Huawei_Challenge2019\\challenge-2019-train_'
+folderMaster = 'C:\\Users\\ohyama\\Documents\SR\\train_'
 positions = ['bag', 'hips', 'torso']
 FFT_Acc_z_FolderName = '\\FFT_sample_Acc_z'
 mean_variance_skew_Folder = '\\mean_variance_skew_Acc_Mag'
@@ -51,8 +51,8 @@ for position in positions:
 
 Label = np.load("train_Label.npy")
 Y = Label.copy()
-Y = np.vstack(Y, Label)
-Y = np.vstack(Y, Label)
+Y = np.vstack((Y, Label))
+Y = np.vstack((Y, Label))
 
 #標準化をする
 X_std = zscore(X, axis=0)
