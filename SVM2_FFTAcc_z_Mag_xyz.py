@@ -21,12 +21,13 @@ def zscore(x, axis = None, xmean = None, xstd = None):
 
 
 # 最初にFFTデータと平均分散データを結合する
-folderMaster = 'D:\\Huawei_Challenge2019\\challenge-2019-train_'
+folderMaster = 'C:\\Users\\ohyama\\Documents\SR\\train_'
 positions = ['bag', 'hips', 'torso']
 FFT_Mag_xyz_FolderName = '\\FFT_sample_Mag_xyz'
 FFT_Acc_z_FolderName = '\\FFT_sample_Acc_z'
 mean_variance_skew_Folder = '\\mean_variance_skew_Acc_Mag'
 i = 0
+X = []
 for position in positions:
     folder = folderMaster + position
     sampleNameList = os.listdir(folder + FFT_Acc_z_FolderName)
@@ -40,10 +41,8 @@ for position in positions:
     acc_z = acc_z.flatten()
     mean_variance_skew = mean_variance_skew[0:9].flatten()
     np_array = np.hstack((mag_xyz, acc_z, mean_variance_skew))
-    if i == 0:
-        X = np_array
-    else:
-        X = np.vstack((X, np_array))
+    np_array = np_array.tolist()
+    X.append(np_array)
     for sampleName in sampleNameList[1:]:
         print(sampleName)
         mag_xyz = np.load(folder + FFT_Mag_xyz_FolderName + "\\" + sampleName)
@@ -53,9 +52,11 @@ for position in positions:
         acc_z = acc_z.flatten()
         mean_variance_skew = mean_variance_skew[0:9].flatten()
         np_array = np.hstack((mag_xyz, acc_z, mean_variance_skew))
-        X = np.vstack((X, np_array))
+        np_array = np_array.tolist()
+        X.append(np_array)
     i += 1
 
+X = np.asarray(X)
 Label = np.load("train_Label.npy")
 Y = Label.copy()
 Y = np.vstack((Y, Label))
@@ -67,8 +68,11 @@ print(X_std[0:5])
 
 np.savez('train2', X=X_std, Y=Y)
 
-#ここでnanの行は消す
+#ここでnanとInfinityの行は消す
 deleteIndex = np.isnan(X_std)
+X_std = np.delete(X_std, deleteIndex, 0)
+Y = np.delete(Y, deleteIndex, 0)
+deleteIndex = np.isinf(X_std)
 X_std = np.delete(X_std, deleteIndex, 0)
 Y = np.delete(Y, deleteIndex, 0)
 
